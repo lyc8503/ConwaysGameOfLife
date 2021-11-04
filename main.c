@@ -24,6 +24,13 @@ int main() {
     // 读取输入文件
     long long x = 0, y = 0;
     FILE *in_file = fopen("input.txt", "r");
+
+    if (in_file == NULL) {
+        printf("Failed to open file input.txt\n");
+        system("pause");
+        return -1;
+    }
+
     int c;
     while ((c = fgetc(in_file)) != EOF) {
         switch (c) {
@@ -41,6 +48,7 @@ int main() {
                 break;
             default:
                 printf("Illegal input.");
+                system("pause");
                 return -1;
         }
     }
@@ -62,5 +70,6 @@ int main() {
     }
 
     fclose(output_file);
+    system("pause");
     return 0;
 }

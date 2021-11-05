@@ -123,6 +123,10 @@ void init_cell_in_board(struct BOARD *board, long long x, long long y) {
 void free_chunk(struct CHUNK *chunk, struct BOARD *board) {
     printf("[CHUNK] delete chunk at: (%d, %d)\n", chunk->x, chunk->y);
 
+    if (board->chunk_num == 1) {  // 只有一个区块时不能回收
+        return;
+    }
+
     if (chunk->prev == NULL) {
         board->init_chunk = chunk->next;
         chunk->next->prev = NULL;

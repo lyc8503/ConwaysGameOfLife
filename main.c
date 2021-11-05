@@ -16,8 +16,8 @@ int main() {
     init_board(&board);
 
     printf("Put the initial pattern in input.txt\n");
+    printf("Old results will be deleted if you continue. Beware!\n");
     printf("Enter calculation times (0 means infinity):");
-
     long long rounds = 0;
     scanf("%lld", &rounds);
 
@@ -47,22 +47,41 @@ int main() {
                 y++;
                 break;
             default:
-                printf("Illegal input.");
+                printf("Illegal input.\n");
                 system("pause");
                 return -1;
         }
     }
 
+    printf("Enter file save mode(0.full 1.last 100 rounds):");
+    int save_mode = 1;
+    scanf("%d", &save_mode);
+
     // 打开输出文件
-    FILE *output_file = fopen("output.txt", "w");
+//    int f_index = 0;
+    FILE *output_file = NULL;
+    system("del round*-*.txt");
 
     while (--rounds != 0) {
+
+        if (board.round % 100 == 1) {
+            fclose(output_file);
+            char filename[50] = {};
+            sprintf(filename, "round%lld-%lld.txt", board.round, board.round + 99);
+            output_file = fopen(filename, "w");
+
+            if (save_mode) {
+                sprintf(filename, "round%lld-%lld.txt", board.round - 200, board.round - 101);
+                remove(filename);
+            }
+        }
+
         char *tmp;
         print_board_to_str(&board, &tmp);
+
         fprintf(output_file, "Round %lld\n", board.round);
         fprintf(output_file, "%s", tmp);
         free(tmp);
-
 
         printf(">>>>> Round %lld\n", board.round);
         next_round(&board);

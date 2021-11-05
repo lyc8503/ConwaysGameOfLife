@@ -65,10 +65,16 @@ int main() {
     while (--rounds != 0) {
 
         if (board.round % 100 == 1) {
-            fclose(output_file);
+            if (output_file != NULL) {
+                fclose(output_file);
+            }
             char filename[50] = {};
             sprintf(filename, "round%lld-%lld.txt", board.round, board.round + 99);
             output_file = fopen(filename, "w");
+
+            if (output_file == NULL) {
+                printf("[FILE] error opening new file.\n");
+            }
 
             if (save_mode) {
                 sprintf(filename, "round%lld-%lld.txt", board.round - 200, board.round - 101);
@@ -79,8 +85,15 @@ int main() {
         char *tmp;
         print_board_to_str(&board, &tmp);
 
-        fprintf(output_file, "Round %lld\n", board.round);
-        fprintf(output_file, "%s", tmp);
+        if (output_file != NULL) {
+            fprintf(output_file, "Round %lld\n", board.round);
+            fprintf(output_file, "%s", tmp);
+        } else {
+            if (board.round != 0) {
+                printf("[FILE] error writing to file.\n");
+            }
+        }
+
         free(tmp);
 
         printf(">>>>> Round %lld\n", board.round);
@@ -88,7 +101,9 @@ int main() {
         printf("[Stats] chunk %lld, cell %lld\n", board.chunk_num, board.total_cell_num);
     }
 
-    fclose(output_file);
+    if (output_file != NULL) {
+        fclose(output_file);
+    }
     system("pause");
     return 0;
 }
